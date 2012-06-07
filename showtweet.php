@@ -1,6 +1,6 @@
 <?php
 
-//自分のつぶやきをmySQLに記録する//
+//MySQLに保存した自分のTLを表示する//
 
 //サーバー情報の取得
 $contents = @file('SVinfo.txt');
@@ -34,9 +34,9 @@ $rst = mysql_query($sql,$con);
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<style type="text/css">
-	body {background-color: black}
-	th {font-size: 14px; color: gray}
-	td {font-size: 10px; color: gray}
+		body {background-color: black}
+		th {font-size: 14px; color: rgba(225,236,236,0.87)}
+		td {font-size: 12px; color: rgba(225,236,236,0.87)}
 	</style>
 </head>
 <body>
