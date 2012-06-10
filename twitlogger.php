@@ -50,15 +50,15 @@ else
 
 include 'tw_OAuth.php';	//OAuth認証を通す
 
-$param["screen_name"] = 'SNZK_Wa';	//tweetsを取得するIDのscreen nameを入力
-$api_url = "http://api.twitter.com/1/statuses/home_timeline.xml?count=200?";
+$param["screen_name"] = 'SNZK_Wa';//SecretKeyをtw_OAuthで呼び出しているのでこの名前はBlankでも動く
+$api_url = "http://api.twitter.com/1/statuses/home_timeline.xml?count=200";	//XML形式でhome_timelineを取得する
 $result = $consumer->sendRequest($api_url,$param, "GET");
 $xml = new SimpleXMLElement($result->getBody());
 
 //2.ここから取得できる分だけLoop回す
 for ($i = 0; $i < count($xml->status); $i++)
 {
-	//2-1,取得したtweetの文字列編集
+	//2-1,取得したtweet情報の編集
 	$cpostdate = date('YmdHis',	strtotime($xml->status[$i]->created_at));
 	$year = intval(substr($cpostdate,0,4));
 	$month = intval(substr($cpostdate,4,2));
@@ -67,15 +67,19 @@ for ($i = 0; $i < count($xml->status); $i++)
 	$minute = intval(substr($cpostdate,10,2));
 	$second = intval(substr($cpostdate,12,2));
 
-	$cname = "'".$xml->status[$i]->user->screen_name."'";
-	$ctweet = "'".$xml->status[$i]->text."'";
-	$id = $xml->status[$i]->id;
-
-	echo $year."/".$month."/".$day."  ".$hour.":".$minute.":".$second."  ID:".$id."<br />";
-	echo $cname."：".$ctweet."<br />";
-	If($id > $idmax)
+	$cname = "'".$xml->status[$i]->user->screen_name."'";	//Screen Name
+	$userid = $xml->status[$i]->user->id;	//ユーザーID
+	$iconurl = $xml->status[$i]->user->profile_image_url;	//アイコンのURL
+	$tweetid = $xml->status[$i]->id;	//tweetのID
+	$ctweet = "'".$xml->status[$i]->text."'";	//tweet本文
+	$client = $xml->status[$i]->source;
+	
+	echo $year."/".$month."/".$day."  ".$hour.":".$minute.":".$second."  ID:".$tweetid."<br />";
+	echo $cname."：".$ctweet."　(".$client."から)<br />";
+	If($tweetid > $idmax)
 	{
-		$sqlist = "INSERT INTO `tbl_tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$cname,$ctweet,$id)";
+		include('tw_GetUserInfo.php');
+		$sqlist = "INSERT INTO `tbl_tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$cname,$ctweet,$tweetid)";
 		$rstist = mysql_query($sqlist,$con);
 		If(!$rstist)
 		{
