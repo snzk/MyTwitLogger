@@ -1,5 +1,4 @@
 <?php
-
 //自分のつぶやきをmySQLに記録する//
 
 //サーバー情報の取得
@@ -48,54 +47,62 @@ else
 	echo "DB上の最新TweetのID取得失敗。"."<br />";
 }
 
-include 'tw_OAuth.php';	//OAuth認証を通す
+//twitteroauthライブラリを使ってOAuth認証を通す
+require_once("twitteroauth/twitteroauth.php");
+$consumerKey = "qUFr8Mn9610IprdmkC5rg";
+$consumerSecret = "Z11yWydPzHHDA99DcRYuji1Z1LgIWeKWQJxqsy5O2M";
+$accessToken = "70108298-fEy4Cb6xLXrvXjDQMrOFnrHMV0Tu1PYRJw0ypKeu0";
+$accessTokenSecret = "GPht9GaUFIt5vB3NuSJAmyE5UPei4huAKQoikZF4";
+$twObj = new TwitterOAuth($consumerKey,$consumerSecret,$accessToken,$accessTokenSecret);
+$req = $twObj->OAuthRequest("https://api.twitter.com/1.1/statuses/home_timeline.json","GET",array("count"=>"200"));
+//返ってきたJSONを格納して一つ一つのtweetをループしてSQLに登録する
+$tw_arr = json_decode($req);
+if (isset($tw_arr)) {
+    foreach ($tw_arr as $key => $val) {
 
-$param["screen_name"] = 'SNZK_Wa';//SecretKeyをtw_OAuthで呼び出しているのでこの名前はBlankでも動く
-$api_url = "http://api.twitter.com/1/statuses/home_timeline.xml?count=200";	//XML形式でhome_timelineを取得する
-$result = $consumer->sendRequest($api_url,$param, "GET");
-$xml = new SimpleXMLElement($result->getBody());
+		//取得したtweet情報の編集
+		$cpostdate = date('YmdHis',	strtotime($tw_arr[$key]->created_at));	//投稿日時
+		$year = intval(substr($cpostdate,0,4));
+		$month = intval(substr($cpostdate,4,2));
+		$day = intval(substr($cpostdate,6,2));
+		$hour = intval(substr($cpostdate,8,2));
+		$minute = intval(substr($cpostdate,10,2));
+		$second = intval(substr($cpostdate,12,2));
 
-//2.ここから取得できる分だけLoop回す
-for ($i = 0; $i < count($xml->status); $i++)
-{
-	//2-1,取得したtweet情報の編集
-	$cpostdate = date('YmdHis',	strtotime($xml->status[$i]->created_at));
-	$year = intval(substr($cpostdate,0,4));
-	$month = intval(substr($cpostdate,4,2));
-	$day = intval(substr($cpostdate,6,2));
-	$hour = intval(substr($cpostdate,8,2));
-	$minute = intval(substr($cpostdate,10,2));
-	$second = intval(substr($cpostdate,12,2));
+		$userid = "'".$tw_arr[$key]->user->id."'";	//ユーザーID
+		$sname = "'".$tw_arr[$key]->user->screen_name."'";	//Screen Name
+		$name = "'".$tw_arr[$key]->user->name."'"; 	//名前
+		$iconurl = $tw_arr[$key]->user->profile_image_url;	//アイコンのURL
+		$tweetid = $tw_arr[$key]->id_str;	//tweetのID
+		$ctweet = "'".$tw_arr[$key]->text."'";	//tweet本文
+ 		$client = $tw_arr[$key]->source;
 
-	$cname = "'".$xml->status[$i]->user->screen_name."'";	//Screen Name
-	$userid = $xml->status[$i]->user->id;	//ユーザーID
-	$iconurl = $xml->status[$i]->user->profile_image_url;	//アイコンのURL
-	$tweetid = $xml->status[$i]->id;	//tweetのID
-	$ctweet = "'".$xml->status[$i]->text."'";	//tweet本文
-	$client = $xml->status[$i]->source;
-	
-	echo $year."/".$month."/".$day."  ".$hour.":".$minute.":".$second."  ID:".$tweetid."<br />";
-	echo $cname."：".$ctweet."　(".$client."から)<br />";
-	If($tweetid > $idmax)
-	{
-		include('tw_GetUserInfo.php');
-		$sqlist = "INSERT INTO `tbl_tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$cname,$ctweet,$tweetid)";
-		$rstist = mysql_query($sqlist,$con);
-		If(!$rstist)
+		echo $year."/".$month."/".$day."  ".$hour.":".$minute.":".$second."  ID:".$tweetid."<br />";
+		echo $sname."：".$userid."：".$ctweet."　(".$client."から)<br />";
+		//取得したtweetIDがSQLに入っている値より大きかったら（＝新しかったら）SQLに保存する
+		If($tweetid > $idmax)
 		{
-			echo "Tweet登録失敗"."<br />";
+			include('tw_GetUserInfo.php');
+			$sqlist = "INSERT INTO `tbl_tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$sname,$ctweet,$tweetid)";
+			$rstist = mysql_query($sqlist,$con);
+			If(!$rstist)
+			{
+				echo "Tweet登録失敗"."<br />";
+			}
+			else
+			{
+				echo " → 登録。"."<br />";
+			}
 		}
 		else
+		//取得したtweetIDがSQLに入っている値と同じかそれより小さかったらそのtweetと以降のtweetも既に取得済みと判断して処理終了
 		{
-			echo " → 登録。"."<br />";
+			echo "→登録済み。プログラム終了";
+			break;
 		}
-	}
-	else
-	{
-		echo "→登録済み。プログラム終了";
-		break;
-	}
+    }
+} else {
+	echo 'つぶやきはありません。';
 }
 mysql_close($con);
-
 ?>
