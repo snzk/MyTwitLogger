@@ -27,12 +27,14 @@ foreach($contents as $line)
 	$i = $i + 1;
 }
 mysql_select_db($DBinfo[0],$con);	//DBに移動
+$Year = date('Y');
 $Month = date('m');
 $Day = date('d');
 $sql = "SELECT * 
 		FROM  `tbl_tweets` 
 		INNER JOIN  `tbl_twUser` ON tbl_tweets.name = tbl_twUser.screenname
-		WHERE MONTH = $Month
+		WHERE YEAR = $Year 
+		AND MONTH = $Month
 		AND DAY = $Day
 		ORDER BY tweetid DESC ";
 $rst = mysql_query($sql,$con);
