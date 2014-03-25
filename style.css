@@ -1,0 +1,43 @@
+body {
+  margin: 0 0 0 0;
+/*
+  background-color: black;
+  color: white
+*/
+}
+.container{
+}
+.tweet {
+}
+.icon {
+  float: left;
+  padding-right: 5px;
+}
+.name {
+  font-size: 11px;
+/*   color: #c0c1f4; */
+}
+.YearMonthDay {
+  font-size: 11px;
+/*   color: red; */
+  float: left;
+  padding-right: 5px;
+}
+.HourMinutesSeconds {
+  font-size: 11px;
+/*   color: lime; */
+  float: left;
+  padding-right: 5px;
+}
+.tweet {
+  font-size: 13px;
+  float: left;
+/*   color: white */
+}
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.clear {
+  clear: both;
+}
