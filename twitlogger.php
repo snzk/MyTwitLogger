@@ -2,13 +2,7 @@
 //自分のつぶやきをmySQLに記録する//
 
 //サーバー情報の取得
-$contents = @file('SVinfo.txt');
-$i = 0;
-foreach($contents as $line)
-{
-	$SVinfo[$i] = str_replace(array("\r\n","\r","\n"),'',$line);
-	$i = $i + 1;
-}
+$SVinfo = getStringfromFile('sample.txt');
 
 //DBに接続してリンクIDを受け取る
 $con = @mysql_connect($SVinfo[0],$SVinfo[1],$SVinfo[2]);
@@ -105,4 +99,16 @@ if (isset($tw_arr)) {
 	echo 'つぶやきはありません。';
 }
 mysql_close($con);
+
+function getStringfromFile($filePath)
+{
+	$i = 0;
+	foreach(@file($filePath) as $line)
+	{
+		$lines[$i] = str_replace(array("\r\n","\r","\n"),'',$line);
+		$i = $i + 1;
+	}
+	return $lines;
+}
+
 ?>
