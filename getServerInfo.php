@@ -1,9 +1,19 @@
 <?PHP
-$contents = @file('SVinfo.txt');
-$i = 0;
-foreach($contents as $line)
+
+$container = getStringfromFile('sample.txt');
+foreach ($container as $sample)
 {
-  $SVinfo[$i] = str_replace(array("\r\n","\r","\n"),'',$line);
-  $i = $i + 1;
+  echo $sample;
+}
+
+function getStringfromFile($filePath)
+{
+  $i = 0;
+  foreach(@file($filePath) as $line)
+  {
+    $lines[$i] = str_replace(array("\r\n","\r","\n"),'',$line);
+    $i = $i + 1;
+  }
+  return $lines;
 }
 ?>
