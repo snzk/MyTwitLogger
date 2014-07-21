@@ -6,6 +6,7 @@ foreach ($container as $sample)
   echo $sample;
 }
 
+
 function getStringfromFile($filePath)
 {
   $i = 0;
