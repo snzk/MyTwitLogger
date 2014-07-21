@@ -12,14 +12,10 @@ if(!$con)
 }
 
 //TXTファイルからDB情報を取得
-$contents = @file('twDBinfo.txt');
-$i = 0;
-foreach($contents as $line)
-{
-	$DBinfo[$i] = str_replace(array("\r\n","\r","\n"),'',$line);
-	$i = $i + 1;
-}
-mysql_select_db($DBinfo[0],$con);	//DBに移動
+$DBinfo = getStringfromFile('twDBinfo.txt');
+
+//DBに移動
+mysql_select_db($DBinfo[0],$con);
 
 //漢字が文字化けするため事前に文字コードをUTF-8にする。そのうち直す
 $sql = "SET NAMES utf8";
