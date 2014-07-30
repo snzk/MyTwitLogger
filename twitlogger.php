@@ -39,10 +39,11 @@ else
 
 //twitteroauthライブラリを使ってOAuth認証を通す
 require_once("twitteroauth/twitteroauth.php");
-$consumerKey = "qUFr8Mn9610IprdmkC5rg";
-$consumerSecret = "Z11yWydPzHHDA99DcRYuji1Z1LgIWeKWQJxqsy5O2M";
-$accessToken = "70108298-fEy4Cb6xLXrvXjDQMrOFnrHMV0Tu1PYRJw0ypKeu0";
-$accessTokenSecret = "GPht9GaUFIt5vB3NuSJAmyE5UPei4huAKQoikZF4";
+$oAuthKeys = getStringfromFile('key.txt');
+$consumerKey = $oAuthKeys[0];
+$consumerSecret = $oAuthKeys[1];
+$accessToken = $oAuthKeys[2];
+$accessTokenSecret = $oAuthKeys[3];
 $twObj = new TwitterOAuth($consumerKey,$consumerSecret,$accessToken,$accessTokenSecret);
 $req = $twObj->OAuthRequest("https://api.twitter.com/1.1/statuses/home_timeline.json","GET",array("count"=>"200"));
 //返ってきたJSONを格納して一つ一つのtweetをループしてSQLに登録する
