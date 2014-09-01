@@ -49,7 +49,7 @@ $req = $twObj->OAuthRequest("https://api.twitter.com/1.1/statuses/home_timeline.
 //返ってきたJSONを格納して一つ一つのtweetをループしてSQLに登録する
 $tw_arr = json_decode($req);
 if (isset($tw_arr)) {
-    foreach ($tw_arr as $key => $val) {
+	foreach ($tw_arr as $key => $val) {
 
 		//取得したtweet情報の編集
 		$cpostdate = date('YmdHis',	strtotime($tw_arr[$key]->created_at));	//投稿日時
@@ -66,13 +66,12 @@ if (isset($tw_arr)) {
 		$iconurl = $tw_arr[$key]->user->profile_image_url;	//アイコンのURL
 		$tweetid = $tw_arr[$key]->id_str;	//tweetのID
 		$ctweet = "'".$tw_arr[$key]->text."'";	//tweet本文
- 		$client = $tw_arr[$key]->source;
+		$client = $tw_arr[$key]->source;
 
 		echo $year."/".$month."/".$day."  ".$hour.":".$minute.":".$second."  ID:".$tweetid."<br />";
 		echo $sname."：".$userid."：".$ctweet."　(".$client."から)<br />";
 		//取得したtweetIDがSQLに入っている値より大きかったら（＝新しかったら）SQLに保存する
-		If($tweetid > $idmax)
-		{
+		If($tweetid > $idmax) {
 			include('tw_GetUserInfo.php');
 			$sqlist = "INSERT INTO `tbl_tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$sname,$ctweet,$tweetid)";
 			$rstist = mysql_query($sqlist,$con);
@@ -87,11 +86,11 @@ if (isset($tw_arr)) {
 		}
 		else
 		//取得したtweetIDがSQLに入っている値と同じかそれより小さかったらそのtweetと以降のtweetも既に取得済みと判断して処理終了
-		{
-			echo "→登録済み。プログラム終了";
-			break;
+			{
+				echo "→登録済み。プログラム終了";
+				break;
+			}
 		}
-    }
 } else {
 	echo 'つぶやきはありません。';
 }
