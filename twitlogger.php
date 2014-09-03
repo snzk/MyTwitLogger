@@ -1,10 +1,7 @@
 <?php
-//自分のつぶやきをmySQLに記録する//
 
-//サーバー情報の取得
-$SVinfo = getStringfromFile('sample.txt');
+$SVinfo = getStringfromFile('server-info.txt');
 
-//DBに接続してリンクIDを受け取る
 $con = @mysql_connect($SVinfo[0],$SVinfo[1],$SVinfo[2]);
 if(!$con)
 {
