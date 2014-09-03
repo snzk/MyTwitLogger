@@ -1,9 +1,17 @@
 <?PHP
 
-$container = getStringfromFile('sample.txt');
-foreach ($container as $sample)
+//サーバー情報の取得
+$SVinfo = getStringfromFile('server-info.txt');
+
+//DBに接続してリンクIDを受け取る
+$con = @mysql_connect($SVinfo[0],$SVinfo[1],$SVinfo[2]);
+if($con)
 {
-  echo $sample;
+  echo "接続成功"."<br />";
+  var_dump($con);
+}
+else {
+  die('Failed connecting to DataBase' .mysql_error());
 }
 
 
@@ -17,4 +25,5 @@ function getStringfromFile($filePath)
   }
   return $lines;
 }
+
 ?>
