@@ -1,18 +1,27 @@
 <?php
 
-$SVinfo = getStringfromFile('server-info.txt');
+  $svInfo = getStringfromFile('server-info.txt');
 
-$con = @mysql_connect($SVinfo[0],$SVinfo[1],$SVinfo[2]);
-if(!$con)
-{
-  die('Failed connecting to DataBase' .mysql_error());
-}
+  $con = @mysql_connect($svInfo[0],$svInfo[1],$svInfo[2]);
+  if($con)
+  {
+    echo "接続成功"."<br />";
+  }
+  else
+  {
+    die('Failed connecting to DataBase' .mysql_error());
+  }
 
-//TXTファイルからDB情報を取得
-$DBinfo = getStringfromFile('twDBinfo.txt');
-
-//DBに移動
-mysql_select_db($DBinfo[0],$con);
+  $dbInfo = getStringfromFile('database-info.txt');
+  $db_selected = mysql_select_db($dbInfo[0],$con);
+  if (!$db_selected)
+  {
+    die('Can not use'.$dbInfo[0] .mysql_error());
+  }
+  else
+  {
+    echo '$db_selected'. "= TRUE.  Succeeded select a DB"."<br />";
+  }
 
 //漢字が文字化けするため事前に文字コードをUTF-8にする。そのうち直す
 $sql = "SET NAMES utf8";
