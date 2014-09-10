@@ -28,7 +28,7 @@
   $rst = mysql_query($rst);
 
   //重複防止のため、table内に保存している最新tweetIDを取得
-  $sqltweet = "SELECT tweetid FROM `tbl_tweets` ORDER BY tweetid DESC LIMIT 0,1";
+  $sqltweet = "SELECT tweetid FROM `tweets` ORDER BY tweetid DESC LIMIT 0,1";
   $rsttweet = mysql_query($sqltweet,$con);
   If($rsttweet)
   {
@@ -78,8 +78,8 @@
       echo $sname."：".$userid."：".$ctweet."　(".$client."から)<br />";
       //取得したtweetIDがSQLに入っている値より大きかったら（＝新しかったら）SQLに保存する
       If($tweetid > $idmax) {
-        include('tw_GetUserInfo.php');
-        $sqlist = "INSERT INTO `tbl_tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$sname,$ctweet,$tweetid)";
+        // include('tw_GetUserInfo.php');
+        $sqlist = "INSERT INTO `tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$sname,$ctweet,$tweetid)";
         $rstist = mysql_query($sqlist,$con);
         If(!$rstist)
         {
