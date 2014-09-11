@@ -3,7 +3,7 @@
 //MySQLに保存した自分のTLを表示する//
 
 //サーバー情報の取得
-$contents = @file('SVinfo.txt');
+$contents = @file('server-info.txt');
 $i = 0;
 foreach($contents as $line)
 {
@@ -18,7 +18,7 @@ if(!$con)
 	die('Failed connecting to DataBase' .mysql_error());
 }
 //TXTファイルからDB情報を取得
-$contents = @file('twDBinfo.txt');
+$contents = @file('database-info.txt');
 $i = 0;
 foreach($contents as $line)
 {
@@ -30,10 +30,10 @@ mysql_select_db($DBinfo[0],$con);	//DBに移動
 $Year = date('Y');
 $Month = date('m');
 $Day = date('d');
-$sql = "SELECT * 
-		FROM  `tbl_tweets` 
-		INNER JOIN  `tbl_twUser` ON tbl_tweets.name = tbl_twUser.screenname
-		WHERE YEAR = $Year 
+$sql = "SELECT *
+		FROM  `tweets`
+		INNER JOIN  `users` ON tweets.name = users.screenname
+		WHERE YEAR = $Year
 		AND MONTH = $Month
 		AND DAY = $Day
 		ORDER BY tweetid DESC ";
@@ -66,7 +66,7 @@ $rst = mysql_query($sql,$con);
 			color: lime
 		}
 		bunsho {
-			font-size: 11px; 
+			font-size: 11px;
 			color: white
 		}
 	</style>
