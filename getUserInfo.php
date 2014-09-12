@@ -3,7 +3,7 @@
   $num = strrpos($iconurl,'/');
   $iconname = substr($iconurl,$num+1);
   $data = file_get_contents($iconurl);
-  file_put_contents('/home/users/2/boo.jp-snzk/web/PEAR/PEAR/twIcon/'.$iconname,$data);
+  file_put_contents('images/icon/'.$iconname,$data);
 
   $sqlusr = "SELECT * FROM `users` WHERE userid = $userid";
   $rstusr = mysql_query($sqlusr,$con);
