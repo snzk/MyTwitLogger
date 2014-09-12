@@ -78,7 +78,7 @@
       echo $sname."：".$userid."：".$ctweet."　(".$client."から)<br />";
       //取得したtweetIDがSQLに入っている値より大きかったら（＝新しかったら）SQLに保存する
       If($tweetid > $idmax) {
-        include('tw_GetUserInfo.php');
+        //include('tw_GetUserInfo.php');
         $sqlist = "INSERT INTO `tweets`(`year`, `month`, `day`, `hour`, `minute`, `second`, `name`, `tweet`, `tweetid`) VALUES ($year,$month,$day,$hour,$minute,$second,$sname,$ctweet,$tweetid)";
         $rstist = mysql_query($sqlist,$con);
         If(!$rstist)
