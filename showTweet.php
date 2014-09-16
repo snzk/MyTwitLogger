@@ -1,5 +1,43 @@
 <?php
 
+  $svInfo = getStringfromFile('server-info.txt');
+
+  $con = @mysql_connect($svInfo[0],$svInfo[1],$svInfo[2]);
+  if($con)
+  {
+    echo "接続成功"."<br />";
+  }
+  else
+  {
+    die('Failed connecting to DataBase' .mysql_error());
+  }
+
+  $dbInfo = getStringfromFile('database-info.txt');
+  $db_selected = mysql_select_db($dbInfo[0],$con);
+  if (!$db_selected)
+  {
+    die('Can not use'.$dbInfo[0] .mysql_error());
+  }
+  else
+  {
+    echo '$db_selected'. "= TRUE.  Succeeded select a DB"."<br />";
+  }
+
+  // $sql = "SET NAMES utf8";
+  // $rst = mysql_query($rst);
+  mysql_set_charset('utf8');
+  mysql_select_db($dbInfo[0],$con);
+  $Year = date('Y');
+  $Month = date('m');
+  $Day = date('d');
+  $sql = "SELECT *
+      FROM  `tweets`
+      WHERE year = $Year
+      AND month = $Month
+      AND day = $Day
+      ORDER BY tweetid DESC ";
+  $rst = mysql_query($sql,$con);
+
   function getStringfromFile($filePath)
   {
     $i = 0;
@@ -11,27 +49,6 @@
     return $lines;
   }
 
-  $svInfo = getStringfromFile('server-info.txt');
-  $con = @mysql_connect($svInfo[0],$svInfo[1],$svInfo[2]);
-  if(!$con)
-  {
-    die('Failed connecting to DataBase' .mysql_error());
-  }
-
-  $DBinfo = getStringfromFile('database-info.txt');
-
-  mysql_select_db($DBinfo[0],$con);
-  $Year = date('Y');
-  $Month = date('m');
-  $Day = date('d');
-  $sql = "SELECT *
-      FROM  `tweets`
-      INNER JOIN  `users` ON tweets.name = users.screenname
-      WHERE YEAR = $Year
-      AND MONTH = $Month
-      AND DAY = $Day
-      ORDER BY tweetid DESC ";
-  $rst = mysql_query($sql,$con);
 ?>
 <html>
 <head>
