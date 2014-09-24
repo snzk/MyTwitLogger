@@ -47,7 +47,7 @@
   <style type="text/css">
     body {
       margin: 0 0 0 0;
-      background-color: black;
+      background-color: #424242;
       color: white
       }
     tweet{
