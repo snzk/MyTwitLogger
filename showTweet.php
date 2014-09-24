@@ -23,19 +23,19 @@
     echo '$db_selected'. "= TRUE.  Succeeded select a DB"."<br />";
   }
 
-  // $sql = "SET NAMES utf8";
-  // $rst = mysql_query($rst);
+  $sql = "SET NAMES utf8";
+  $rst = mysql_query($rst);
   mysql_set_charset('utf8');
   mysql_select_db($dbInfo[0],$con);
   $Year = date('Y');
   $Month = date('m');
   $Day = date('d');
   $sql = "SELECT *
-      FROM  `tweets`
-      WHERE year = $Year
-      AND month = $Month
-      AND day = $Day
-      ORDER BY tweetid DESC ";
+    FROM  `tweets`
+    WHERE year = $Year
+    AND month = $Month
+    AND day = $Day
+    ORDER BY tweetid DESC ";
   $rst = mysql_query($sql,$con);
 
   function getStringfromFile($filePath)
