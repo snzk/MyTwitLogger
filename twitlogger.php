@@ -1,7 +1,9 @@
 <?php
 
-  $svInfo = getStringfromFile('server-info.txt');
+  require_once("function.php");
+  require_once("twitteroauth/twitteroauth.php");
 
+  $svInfo = getStringfromFile('server-info.txt');
   $con = @mysql_connect($svInfo[0],$svInfo[1],$svInfo[2]);
   if($con)
   {
@@ -44,7 +46,6 @@
   }
 
   //twitteroauthライブラリを使ってOAuth認証を通す
-  require_once("twitteroauth/twitteroauth.php");
   $oAuthKeys = getStringfromFile('key.txt');
   $consumerKey = $oAuthKeys[0];
   $consumerSecret = $oAuthKeys[1];
@@ -101,16 +102,5 @@
     echo 'つぶやきはありません。';
   }
   mysql_close($con);
-
-  function getStringfromFile($filePath)
-  {
-    $i = 0;
-    foreach(@file($filePath) as $line)
-    {
-      $lines[$i] = str_replace(array("\r\n","\r","\n"),'',$line);
-      $i = $i + 1;
-    }
-    return $lines;
-  }
 
 ?>
