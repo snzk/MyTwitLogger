@@ -1,5 +1,6 @@
 <?php
 
+  require_once("function.php");
   $svInfo = getStringfromFile('server-info.txt');
 
   $con = @mysql_connect($svInfo[0],$svInfo[1],$svInfo[2]);
@@ -37,17 +38,6 @@
     AND day = $Day
     ORDER BY tweetid DESC ";
   $rst = mysql_query($sql,$con);
-
-  function getStringfromFile($filePath)
-  {
-    $i = 0;
-    foreach(@file($filePath) as $line)
-    {
-      $lines[$i] = str_replace(array("\r\n","\r","\n"),'',$line);
-      $i = $i + 1;
-    }
-    return $lines;
-  }
 
 ?>
 <html>
